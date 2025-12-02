@@ -27,7 +27,7 @@ The official web interface for Xorax, a non-custodial privacy mixer built on Sol
 
 ## 📦 Installation
 
-\`\`\`bash
+```bash
 # Clone the repository
 git clone https://github.com/XoraxProtocol/xorax-ui.git
 cd xorax-ui
@@ -37,13 +37,13 @@ yarn install
 
 # Copy environment file
 cp .env.example .env.local
-\`\`\`
+```
 
 ## ⚙️ Configuration
 
-Create a \`.env.local\` file with the following variables:
+Create a `.env.local` file with the following variables:
 
-\`\`\`env
+```env
 # Solana Configuration
 NEXT_PUBLIC_SOLANA_NETWORK=devnet
 NEXT_PUBLIC_RPC_URL=https://api.devnet.solana.com
@@ -53,11 +53,11 @@ NEXT_PUBLIC_PROGRAM_ID=XoPB2WDHGJrnhR78xG9EfuU8PGYHchcPvygycaHuHGz
 
 # Relayer API (for gasless withdrawals)
 NEXT_PUBLIC_RELAYER_API_URL=http://localhost:3001
-\`\`\`
+```
 
 ## 🚀 Development
 
-\`\`\`bash
+```bash
 # Run development server
 yarn dev
 
@@ -66,13 +66,13 @@ yarn build
 
 # Start production server
 yarn start
-\`\`\`
+```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
 ## 📁 Project Structure
 
-\`\`\`
+```
 xorax-ui/
 ├── app/                    # Next.js App Router pages
 │   ├── dashboard/         # Main mixer interface
@@ -85,11 +85,11 @@ xorax-ui/
 ├── lib/                   # Utility functions
 ├── public/                # Static assets
 └── .env.local            # Environment variables (not in git)
-\`\`\`
+```
 
 ## 🔐 Security
 
-- **Never commit \`.env.local\`** - Contains sensitive configuration
+- **Never commit `.env.local`** - Contains sensitive configuration
 - **Never commit wallet files** - Keypairs should never be in version control
 - **Use environment variables** - For all sensitive data
 - **Verify program ID** - Always check you're interacting with the correct program
