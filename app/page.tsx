@@ -9,17 +9,20 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import BoltIcon from "@mui/icons-material/Bolt";
 import CodeIcon from "@mui/icons-material/Code";
+import SplashCursor from "../components/SplashCursor";
 
 export default function Home() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-purple-950">
+    <div className="min-h-screen bg-linear-to-br from-purple-900 via-black to-purple-950">
+      <SplashCursor />
+
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-16">
         {/* Navigation */}
         <nav className="flex items-center justify-between mb-12 lg:mb-20">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
               <span className="text-white text-xl font-bold">X</span>
             </div>
             <span className="text-xl lg:text-2xl font-bold text-white">
@@ -49,7 +52,7 @@ export default function Home() {
             </a>
             <a
               href="/dashboard"
-              className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-medium hover:opacity-90 transition"
+              className="px-6 py-2 bg-linear-to-r from-purple-600 to-pink-600 rounded-full text-white font-medium hover:opacity-90 transition"
             >
               Launch App
             </a>
@@ -112,7 +115,7 @@ export default function Home() {
             </a>
             <a
               href="/dashboard"
-              className="block text-center px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-medium hover:opacity-90 transition"
+              className="block text-center px-6 py-3 bg-linear-to-r from-purple-600 to-pink-600 rounded-full text-white font-medium hover:opacity-90 transition"
             >
               Launch App
             </a>
@@ -127,7 +130,7 @@ export default function Home() {
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 lg:mb-6 leading-tight px-4">
             Mix Your SOL,
             <br />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               Keep Your Privacy
             </span>
           </h1>
@@ -140,7 +143,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center px-4">
             <a
               href="/dashboard"
-              className="px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
+              className="px-6 lg:px-8 py-3 lg:py-4 bg-linear-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
             >
               Start Mixing Now
             </a>
@@ -194,7 +197,7 @@ export default function Home() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8 px-4">
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <AttachMoneyIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -207,7 +210,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <AccessTimeIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -220,7 +223,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <PublicIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -233,7 +236,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <LockOpenIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -246,7 +249,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <DiamondIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -259,7 +262,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8 hover:bg-white/10 transition">
-              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
+              <div className="w-12 lg:w-14 h-12 lg:h-14 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 lg:mb-6">
                 <BoltIcon sx={{ fontSize: 28 }} className="text-white" />
               </div>
               <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
@@ -286,7 +289,7 @@ export default function Home() {
 
           <div className="max-w-4xl mx-auto space-y-8 lg:space-y-12">
             <div className="flex gap-4 lg:gap-6 items-start">
-              <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
+              <div className="shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
                 1
               </div>
               <div>
@@ -302,7 +305,7 @@ export default function Home() {
             </div>
 
             <div className="flex gap-4 lg:gap-6 items-start">
-              <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
+              <div className="shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
                 2
               </div>
               <div>
@@ -318,7 +321,7 @@ export default function Home() {
             </div>
 
             <div className="flex gap-4 lg:gap-6 items-start">
-              <div className="flex-shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
+              <div className="shrink-0 w-10 h-10 lg:w-12 lg:h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg lg:text-xl">
                 3
               </div>
               <div>
@@ -337,7 +340,7 @@ export default function Home() {
 
         {/* SDK Section */}
         <section className="mb-20 lg:mb-32 px-4">
-          <div className="bg-gradient-to-br from-indigo-900/70 to-purple-900/50 rounded-3xl border border-indigo-700/50 p-8 lg:p-12">
+          <div className="bg-linear-to-br from-indigo-900/70 to-purple-900/50 rounded-3xl border border-indigo-700/50 p-8 lg:p-12">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-8 lg:mb-10">
                 <div className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/20 rounded-full text-indigo-300 text-xs lg:text-sm mb-4 lg:mb-6 border border-indigo-500/30">
@@ -403,7 +406,7 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
                     href="https://www.npmjs.com/package/xorax-sdk"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
+                    className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-linear-to-r from-indigo-600 to-purple-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
                   >
                     View on npm →
                   </a>
@@ -429,7 +432,7 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
 
         {/* Token Section */}
         <section className="mb-20 lg:mb-32 px-4">
-          <div className="bg-gradient-to-br from-purple-900/70 to-pink-900/50 rounded-3xl border border-purple-700/50 p-8 lg:p-12 text-center">
+          <div className="bg-linear-to-br from-purple-900/70 to-pink-900/50 rounded-3xl border border-purple-700/50 p-8 lg:p-12 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-yellow-500/20 rounded-full text-yellow-300 text-xs lg:text-sm mb-4 lg:mb-6 border border-yellow-500/30">
               <DiamondIcon sx={{ fontSize: 16 }} /> $XORAX Token
             </div>
@@ -469,7 +472,7 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
             <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 justify-center">
               <a
                 href="#"
-                className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
+                className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-linear-to-r from-yellow-600 to-orange-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
               >
                 Buy $XORAX
               </a>
@@ -484,7 +487,7 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
         </section>
 
         {/* CTA Section */}
-        <section className="text-center py-12 lg:py-20 bg-gradient-to-r from-purple-900/50 to-pink-900/50 rounded-3xl border border-purple-700/30 mx-4">
+        <section className="text-center py-12 lg:py-20 bg-linear-to-r from-purple-900/50 to-pink-900/50 rounded-3xl border border-purple-700/30 mx-4">
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4 lg:mb-6 px-4">
             Ready to Mix?
           </h2>
@@ -494,7 +497,7 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
           </p>
           <a
             href="/dashboard"
-            className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
+            className="inline-block px-6 lg:px-8 py-3 lg:py-4 bg-linear-to-r from-purple-600 to-pink-600 rounded-full text-white font-semibold text-base lg:text-lg hover:scale-105 transition-transform"
           >
             Launch Xorax App →
           </a>

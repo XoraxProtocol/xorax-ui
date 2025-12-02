@@ -20,6 +20,7 @@ import {
   saveDepositCredentials,
   getAllSavedDeposits,
 } from "@/lib/crypto";
+import SplashCursor from "@/components/SplashCursor";
 
 export default function Dashboard() {
   const wallet = useWallet();
@@ -335,7 +336,15 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-black flex flex-col lg:flex-row relative overflow-hidden">
+      {/* Animated Background Gradients */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      <SplashCursor />
       {/* Mobile Header */}
       <div className="lg:hidden sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-800/30">
         <div className="p-4 flex items-center justify-between">
@@ -573,13 +582,20 @@ export default function Dashboard() {
         <div className="p-3 lg:p-8 max-w-4xl mx-auto">
           {message && (
             <div
-              className={`mb-4 lg:mb-6 p-3 lg:p-4 rounded-xl border-2 backdrop-blur ${
+              className={`mb-4 lg:mb-6 p-4 lg:p-5 rounded-xl border-2 backdrop-blur shadow-2xl animate-in slide-in-from-top duration-300 hover:scale-[1.02] transition-transform ${
                 message.type === "success"
-                  ? "bg-green-900/30 border-green-500/50 text-green-300"
-                  : "bg-red-900/30 border-red-500/50 text-red-300"
-              } animate-in slide-in-from-top duration-300`}
+                  ? "bg-gradient-to-br from-green-900/40 to-emerald-900/40 border-green-500/50 text-green-200 shadow-green-500/30"
+                  : "bg-gradient-to-br from-red-900/40 to-rose-900/40 border-red-500/50 text-red-200 shadow-red-500/30"
+              }`}
             >
-              <pre className="whitespace-pre-wrap text-sm">{message.text}</pre>
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">
+                  {message.type === "success" ? "✅" : "❌"}
+                </span>
+                <pre className="whitespace-pre-wrap text-sm flex-1 leading-relaxed">
+                  {message.text}
+                </pre>
+              </div>
             </div>
           )}
 
@@ -677,12 +693,138 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* Stats Overview */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
+            <div className="bg-gradient-to-br from-purple-900/40 to-purple-950/40 border border-purple-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-transform duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  💰
+                </span>
+                <span className="text-xs text-purple-300 font-semibold">
+                  Total Value
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-white">
+                {savedDeposits.reduce((sum, d) => sum + d.amount, 0).toFixed(2)}{" "}
+                SOL
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-pink-900/40 to-pink-950/40 border border-pink-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-transform duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  🔒
+                </span>
+                <span className="text-xs text-pink-300 font-semibold">
+                  Active Deposits
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-white">
+                {savedDeposits.length}
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-950/40 border border-indigo-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-transform duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  ⚡
+                </span>
+                <span className="text-xs text-indigo-300 font-semibold">
+                  Mixing Fee
+                </span>
+              </div>
+              <p className="text-2xl font-bold text-white">{MIXING_FEE} SOL</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-950/40 border border-emerald-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-transform duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  🔐
+                </span>
+                <span className="text-xs text-emerald-300 font-semibold">
+                  Status
+                </span>
+              </div>
+              <p className="text-sm font-bold text-emerald-400">Ready to Mix</p>
+            </div>
+          </div>
+
+          {/* Stats Overview Cards */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
+            <div className="bg-gradient-to-br from-purple-900/40 to-purple-950/40 border border-purple-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  💰
+                </span>
+                <span className="text-xs text-purple-300 font-semibold">
+                  Total Value
+                </span>
+              </div>
+              <p className="text-xl lg:text-2xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                {savedDeposits.reduce((sum, d) => sum + d.amount, 0).toFixed(2)}{" "}
+                SOL
+              </p>
+              <p className="text-xs text-purple-400 mt-1">In mixer</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-pink-900/40 to-pink-950/40 border border-pink-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  🔒
+                </span>
+                <span className="text-xs text-pink-300 font-semibold">
+                  Active Deposits
+                </span>
+              </div>
+              <p className="text-xl lg:text-2xl font-bold text-white bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+                {savedDeposits.length}
+              </p>
+              <p className="text-xs text-pink-400 mt-1">Secured</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-900/40 to-indigo-950/40 border border-indigo-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-2xl group-hover:scale-125 transition-transform">
+                  ⚡
+                </span>
+                <span className="text-xs text-indigo-300 font-semibold">
+                  Mixing Fee
+                </span>
+              </div>
+              <p className="text-xl lg:text-2xl font-bold text-white bg-gradient-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
+                {MIXING_FEE} SOL
+              </p>
+              <p className="text-xs text-indigo-400 mt-1">Per transaction</p>
+            </div>
+
+            <div className="bg-gradient-to-br from-emerald-900/40 to-emerald-950/40 border border-emerald-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
+              <div className="relative">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl group-hover:scale-125 transition-transform">
+                    🔐
+                  </span>
+                  <span className="text-xs text-emerald-300 font-semibold">
+                    Privacy Status
+                  </span>
+                </div>
+                <p className="text-sm lg:text-base font-bold text-emerald-400 flex items-center gap-2">
+                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                  Protected
+                </p>
+                <p className="text-xs text-emerald-400 mt-1">
+                  Maximum security
+                </p>
+              </div>
+            </div>
+          </div>
+
           <div className="grid gap-6">
             {/* Deposit Tab */}
             {activeTab === "deposit" && (
-              <div className="bg-gradient-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-3 lg:p-8 backdrop-blur-xl">
+              <div className="bg-gradient-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-3 lg:p-8 backdrop-blur-xl shadow-2xl">
                 <h3 className="text-lg lg:text-xl font-bold text-white mb-3 lg:mb-6 flex items-center gap-2">
-                  <span className="text-xl lg:text-2xl">💸</span>
+                  <span className="text-xl lg:text-2xl animate-pulse">💸</span>
                   Choose Amount
                 </h3>
 
@@ -783,25 +925,55 @@ export default function Dashboard() {
 
                 {/* Withdrawal Delay */}
                 <div className="mb-3 lg:mb-6">
-                  <label className="block text-xs lg:text-sm font-semibold text-purple-300 mb-2 lg:mb-3">
-                    ⏰ Privacy Delay
+                  <label className="block text-xs lg:text-sm font-semibold text-purple-300 mb-2 lg:mb-3 flex items-center gap-2">
+                    <span className="text-base">⏰</span>
+                    <span>Privacy Delay</span>
+                    <span className="text-xs font-normal text-purple-400 ml-auto">
+                      (Longer = Better Privacy)
+                    </span>
                   </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 lg:gap-3">
-                    {delayOptions.map((option) => (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-3">
+                    {delayOptions.map((option, idx) => (
                       <button
                         key={option.value}
                         onClick={() => setDelay(option.value)}
-                        className={`py-3 lg:py-4 px-3 lg:px-4 rounded-xl border-2 transition duration-300 ${
+                        className={`group relative py-3 lg:py-4 px-3 lg:px-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 overflow-hidden ${
                           delay === option.value
-                            ? "bg-gradient-to-br from-purple-600/40 to-pink-600/40 border-purple-400 text-white shadow-lg shadow-purple-500/50"
-                            : "bg-purple-600/10 border-purple-800/30 text-gray-400 hover:text-white hover:border-purple-600 hover:bg-purple-600/20"
+                            ? "bg-gradient-to-br from-purple-600/40 to-pink-600/40 border-purple-400 text-white shadow-lg shadow-purple-500/50 scale-105"
+                            : "bg-purple-600/10 border-purple-800/30 text-gray-400 hover:text-white hover:border-purple-600 hover:bg-purple-600/20 hover:shadow-lg"
                         }`}
                       >
-                        <div className="font-bold text-base lg:text-lg">
-                          {option.label}
-                        </div>
-                        <div className="text-xs opacity-75 mt-1">
-                          {option.privacy} Privacy
+                        {/* Animated background on hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-500/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
+
+                        <div className="relative">
+                          <div className="font-bold text-sm lg:text-base mb-1">
+                            {option.label}
+                          </div>
+                          <div
+                            className={`text-xs mt-1 flex items-center justify-center gap-1 ${
+                              delay === option.value
+                                ? "text-purple-200"
+                                : "opacity-75"
+                            }`}
+                          >
+                            {/* Privacy level indicator */}
+                            <div className="flex gap-0.5">
+                              {[...Array(5)].map((_, i) => (
+                                <div
+                                  key={i}
+                                  className={`w-1 h-3 rounded-full ${
+                                    i <= idx
+                                      ? delay === option.value
+                                        ? "bg-purple-300"
+                                        : "bg-purple-500"
+                                      : "bg-gray-600"
+                                  }`}
+                                />
+                              ))}
+                            </div>
+                            <span className="ml-1">{option.privacy}</span>
+                          </div>
                         </div>
                       </button>
                     ))}
@@ -854,16 +1026,19 @@ export default function Dashboard() {
                 </h3>
 
                 {/* File Upload Section */}
-                <div className="mb-4 lg:mb-6 p-3 lg:p-5 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-700/50 border-dashed rounded-xl backdrop-blur">
+                <div className="mb-4 lg:mb-6 p-4 lg:p-6 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-700/50 border-dashed rounded-xl backdrop-blur hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300">
                   <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                    <div className="text-4xl group-hover:scale-110 transition duration-300">
-                      📁
+                    <div className="relative">
+                      <div className="text-5xl group-hover:scale-110 transition-transform duration-300 group-hover:rotate-12">
+                        📁
+                      </div>
+                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full animate-ping"></div>
                     </div>
                     <div className="text-center">
-                      <p className="text-purple-200 font-bold text-lg">
+                      <p className="text-purple-200 font-bold text-base lg:text-lg mb-1">
                         Upload Credentials File
                       </p>
-                      <p className="text-xs text-purple-300 mt-1">
+                      <p className="text-xs text-purple-300">
                         Click to upload your JSON file or drag it here
                       </p>
                     </div>
@@ -873,7 +1048,7 @@ export default function Dashboard() {
                       onChange={handleFileUpload}
                       className="hidden"
                     />
-                    <div className="px-6 py-2 rounded-lg bg-purple-600/20 border border-purple-500/50 text-purple-200 text-sm font-semibold group-hover:bg-purple-600/40 transition">
+                    <div className="px-6 py-2.5 rounded-lg bg-gradient-to-r from-purple-600/30 to-pink-600/30 border border-purple-500/50 text-purple-100 text-sm font-semibold group-hover:from-purple-600/50 group-hover:to-pink-600/50 group-hover:border-purple-400 group-hover:scale-105 transition-all duration-300 shadow-lg">
                       Choose File
                     </div>
                   </label>

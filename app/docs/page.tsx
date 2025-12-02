@@ -31,6 +31,7 @@ import RocketIcon from "@mui/icons-material/Rocket";
 import WaterDropIcon from "@mui/icons-material/WaterDrop";
 import DiamondIcon from "@mui/icons-material/Diamond";
 import WarningIcon from "@mui/icons-material/Warning";
+import SplashCursor from "@/components/SplashCursor";
 
 export default function DocsPage() {
   const [activeSection, setActiveSection] = useState("introduction");
@@ -79,7 +80,8 @@ export default function DocsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-black to-purple-950">
+    <div className="min-h-screen bg-linear-to-br from-purple-900 via-black to-purple-950">
+      <SplashCursor />
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8 lg:mb-12">
