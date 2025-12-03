@@ -513,17 +513,24 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
             © 2025 Xorax. Open source privacy mixer on Solana.
           </p>
           <div className="flex gap-4 lg:gap-6 justify-center text-sm lg:text-base">
-            <a href="#" className="hover:text-purple-400 transition">
+            <a
+              href="https://github.com/XoraxProtocol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-purple-400 transition"
+            >
               GitHub
             </a>
             <a href="/docs" className="hover:text-purple-400 transition">
               Docs
             </a>
-            <a href="#" className="hover:text-purple-400 transition">
+            <a
+              href="https://x.com/xoraxprotocol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-purple-400 transition"
+            >
               Twitter
-            </a>
-            <a href="#" className="hover:text-purple-400 transition">
-              Discord
             </a>
           </div>
         </footer>
