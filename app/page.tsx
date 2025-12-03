@@ -22,8 +22,12 @@ export default function Home() {
         {/* Navigation */}
         <nav className="flex items-center justify-between mb-12 lg:mb-20">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-              <span className="text-white text-xl font-bold">X</span>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white">
+              <img
+                src="/xorax_logo.png"
+                alt="Xorax Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-xl lg:text-2xl font-bold text-white">
               Xorax

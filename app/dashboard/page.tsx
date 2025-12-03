@@ -60,6 +60,11 @@ export default function Dashboard() {
     text: string;
   } | null>(null);
 
+  // Relayer connection status
+  const [relayerStatus, setRelayerStatus] = useState<
+    "checking" | "online" | "offline"
+  >("checking");
+
   // Withdraw form
   const [commitmentHex, setCommitmentHex] = useState("");
   const [secretHex, setSecretHex] = useState("");
@@ -94,6 +99,37 @@ export default function Dashboard() {
     const deposits = getAllSavedDeposits();
     setSavedDeposits(deposits);
   }, []);
+
+  // Check relayer health
+  useEffect(() => {
+    const checkRelayerHealth = async () => {
+      try {
+        const response = await fetch(
+          `${xorax.RELAYER_API_URL || "http://localhost:3001"}/health`,
+          {
+            method: "GET",
+            signal: AbortSignal.timeout(5000), // 5 second timeout
+          }
+        );
+
+        if (response.ok) {
+          setRelayerStatus("online");
+        } else {
+          setRelayerStatus("offline");
+        }
+      } catch (error) {
+        setRelayerStatus("offline");
+      }
+    };
+
+    // Initial check
+    checkRelayerHealth();
+
+    // Check every 30 seconds
+    const interval = setInterval(checkRelayerHealth, 30000);
+
+    return () => clearInterval(interval);
+  }, [xorax]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -206,9 +242,27 @@ export default function Dashboard() {
       URL.revokeObjectURL(url);
     } catch (error: any) {
       console.error("Deposit error:", error);
+
+      // Parse error messages for better UX
+      let errorMessage = error.message || "Unknown error";
+
+      if (errorMessage.includes("User rejected")) {
+        errorMessage = "Transaction cancelled by user";
+      } else if (errorMessage.includes("insufficient funds")) {
+        errorMessage =
+          "Insufficient SOL balance. Please add funds to your wallet.";
+      } else if (errorMessage.includes("blockhash")) {
+        errorMessage = "Network congestion. Please try again in a few moments.";
+      } else if (errorMessage.includes("timeout")) {
+        errorMessage = "Transaction timeout. Please try again.";
+      } else if (errorMessage.includes("0x1")) {
+        errorMessage =
+          "Transaction failed. You may have insufficient funds or network issues.";
+      }
+
       setMessage({
         type: "error",
-        text: `Deposit failed: ${error.message || "Unknown error"}`,
+        text: `Deposit failed: ${errorMessage}`,
       });
     } finally {
       setLoading(false);
@@ -269,9 +323,16 @@ export default function Dashboard() {
       setSavedDeposits(getAllSavedDeposits());
     } catch (error: any) {
       console.error("Withdraw error:", error);
+
+      // Parse error for user-friendly messages
+      let errorMessage = error.message || "Unknown error";
+
+      // Remove redundant "Withdrawal failed:" prefix if present
+      errorMessage = errorMessage.replace(/^Withdrawal failed:\s*/i, "");
+
       setMessage({
         type: "error",
-        text: `Withdrawal failed: ${error.message || "Unknown error"}`,
+        text: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -372,8 +433,12 @@ export default function Dashboard() {
       <div className="lg:hidden sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-800/30">
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-              <span className="text-white text-xl font-bold">X</span>
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 overflow-hidden bg-white">
+              <img
+                src="/xorax_logo.png"
+                alt="Xorax Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h1 className="text-lg font-bold text-white">Xorax</h1>
@@ -437,8 +502,12 @@ export default function Dashboard() {
         <div className="p-4 lg:p-6 pt-20 lg:pt-6">
           {/* Logo - Desktop only (mobile has header) */}
           <div className="hidden lg:flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-linear-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-              <span className="text-white text-2xl font-bold">X</span>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 overflow-hidden bg-white">
+              <img
+                src="/xorax_logo.png"
+                alt="Xorax Logo"
+                className="w-full h-full object-contain"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Xorax</h1>
@@ -536,6 +605,51 @@ export default function Dashboard() {
               </div>
               <p className="text-xs text-gray-400 font-mono truncate">
                 {xorax.programId?.toString().substring(0, 16) || "Loading"}...
+              </p>
+            </div>
+
+            <div
+              className={`p-3 rounded-lg border ${
+                relayerStatus === "online"
+                  ? "bg-emerald-900/20 border-emerald-700/30"
+                  : relayerStatus === "offline"
+                  ? "bg-red-900/20 border-red-700/30"
+                  : "bg-yellow-900/20 border-yellow-700/30"
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-1">
+                <div
+                  className={`w-2 h-2 rounded-full ${
+                    relayerStatus === "online"
+                      ? "bg-emerald-400 animate-pulse"
+                      : relayerStatus === "offline"
+                      ? "bg-red-400"
+                      : "bg-yellow-400 animate-pulse"
+                  }`}
+                ></div>
+                <span
+                  className={`text-xs font-semibold ${
+                    relayerStatus === "online"
+                      ? "text-emerald-300"
+                      : relayerStatus === "offline"
+                      ? "text-red-300"
+                      : "text-yellow-300"
+                  }`}
+                >
+                  Relayer{" "}
+                  {relayerStatus === "checking"
+                    ? "Checking..."
+                    : relayerStatus === "online"
+                    ? "Online"
+                    : "Offline"}
+                </span>
+              </div>
+              <p className="text-xs text-gray-400 truncate">
+                {relayerStatus === "online"
+                  ? "Gasless withdrawals ready"
+                  : relayerStatus === "offline"
+                  ? "Service unavailable"
+                  : "Checking connection..."}
               </p>
             </div>
           </div>
