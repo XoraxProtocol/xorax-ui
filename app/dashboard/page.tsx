@@ -43,7 +43,7 @@ import {
   saveDepositCredentials,
   getAllSavedDeposits,
 } from "@/lib/crypto";
-import SplashCursor from "@/components/SplashCursor";
+// import SplashCursor from "@/components/SplashCursor";
 
 export default function Dashboard() {
   const wallet = useWallet();
@@ -428,7 +428,7 @@ export default function Dashboard() {
         <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
 
-      <SplashCursor />
+      {/* <SplashCursor /> */}
       {/* Mobile Header */}
       <div className="lg:hidden sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-800/30">
         <div className="p-4 flex items-center justify-between">
