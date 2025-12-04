@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { PublicKey } from "@solana/web3.js";
 import { BN } from "@coral-xyz/anchor";
 import {
@@ -23,6 +24,7 @@ import {
 
 export default function Dashboard() {
   const wallet = useWallet();
+  const { setVisible } = useWalletModal();
   const xorax = useXoraxProgram();
 
   const [activeTab, setActiveTab] = useState<"deposit" | "withdraw">("deposit");
@@ -744,24 +746,35 @@ export default function Dashboard() {
                 {/* Mix Button */}
                 <div className="mb-3 lg:mb-6">
                   <button
-                    onClick={() => {
+                    onClick={async () => {
+                      if (!wallet.connected) {
+                        setVisible(true);
+                        return;
+                      }
                       const amount = selectedAmount || parseFloat(customAmount);
                       if (amount && amount >= MIN_DEPOSIT_AMOUNT) {
                         handleDeposit(amount);
                       }
                     }}
-                    disabled={
-                      loading ||
-                      (!selectedAmount &&
-                        (!customAmount ||
-                          parseFloat(customAmount) < MIN_DEPOSIT_AMOUNT))
-                    }
+                    disabled={loading}
                     className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
                   >
                     {loading ? (
                       <>
                         <span className="animate-spin text-2xl">⏳</span>
                         <span>Processing...</span>
+                      </>
+                    ) : !wallet.connected ? (
+                      <>
+                        <span className="text-2xl">🔌</span>
+                        <span>Connect Wallet</span>
+                      </>
+                    ) : !selectedAmount &&
+                      (!customAmount ||
+                        parseFloat(customAmount) < MIN_DEPOSIT_AMOUNT) ? (
+                      <>
+                        <span className="text-2xl">🌀</span>
+                        <span>Select Amount</span>
                       </>
                     ) : (
                       <>
