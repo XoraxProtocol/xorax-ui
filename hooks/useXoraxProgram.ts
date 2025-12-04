@@ -5,9 +5,7 @@ import { useMemo } from "react";
 import idl from "@/app/idl/xorax.json";
 
 // Program ID from your deployed contract
-const PROGRAM_ID = new PublicKey(
-  "AmFvu4oTkcyRYhFDXVUq9iBKqAGZjWBKx7HRp1Yhqryb"
-);
+const PROGRAM_ID = new PublicKey("JJWGp5cinhhupX8LNm6oThsuzdt3esnJZZLYTosqMEm");
 
 // Suggested deposit amounts (UI only, any amount >= 0.01 SOL is allowed)
 export const SUGGESTED_AMOUNTS = [0.1, 0.5, 1, 5, 10];

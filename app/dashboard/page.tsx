@@ -340,8 +340,12 @@ export default function Dashboard() {
       <div className="lg:hidden sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-800/30">
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-              <span className="text-white text-xl font-bold">X</span>
+            <div className="w-10 h-10 rounded-xl overflow-hidden shadow-lg shadow-purple-500/50">
+              <img
+                src="/xorax_logo.png"
+                alt="Xorax Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <h1 className="text-lg font-bold text-white">Xorax</h1>
@@ -437,8 +441,12 @@ export default function Dashboard() {
         <div className="p-4 lg:p-6 pt-20 lg:pt-6">
           {/* Logo - Desktop only (mobile has header) */}
           <div className="hidden lg:flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
-              <span className="text-white text-2xl font-bold">X</span>
+            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-lg shadow-purple-500/50">
+              <img
+                src="/xorax_logo.png"
+                alt="Xorax Logo"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Xorax</h1>

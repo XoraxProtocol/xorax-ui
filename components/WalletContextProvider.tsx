@@ -22,11 +22,20 @@ export function WalletContextProvider({
 }: {
   children: React.ReactNode;
 }) {
-  // Use devnet for now (change to mainnet-beta for production)
-  const network = WalletAdapterNetwork.Devnet;
+  // Get network and RPC endpoint from environment variables
+  const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+  const networkEnv = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
 
-  // You can also provide a custom RPC endpoint
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  const network =
+    networkEnv === "mainnet"
+      ? WalletAdapterNetwork.Mainnet
+      : WalletAdapterNetwork.Devnet;
+
+  // Use custom RPC endpoint from env or fallback to default
+  const endpoint = useMemo(
+    () => rpcUrl || clusterApiUrl(network),
+    [rpcUrl, network]
+  );
 
   // Configure supported wallets
   const wallets = useMemo(
