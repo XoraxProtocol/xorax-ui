@@ -5,7 +5,9 @@ import { useMemo } from "react";
 import idl from "@/app/idl/xorax.json";
 
 // Program ID from your deployed contract
-const PROGRAM_ID = new PublicKey("XoPB2WDHGJrnhR78xG9EfuU8PGYHchcPvygycaHuHGz");
+const PROGRAM_ID = new PublicKey(
+  "AmFvu4oTkcyRYhFDXVUq9iBKqAGZjWBKx7HRp1Yhqryb"
+);
 
 // Suggested deposit amounts (UI only, any amount >= 0.01 SOL is allowed)
 export const SUGGESTED_AMOUNTS = [0.1, 0.5, 1, 5, 10];
@@ -111,17 +113,6 @@ export function useXoraxProgram() {
     recipient: PublicKey
   ): Promise<string> => {
     try {
-      // Check if relayer is available
-      const healthCheck = await fetch(`${RELAYER_API_URL}/health`).catch(
-        () => null
-      );
-
-      if (!healthCheck || !healthCheck.ok) {
-        throw new Error(
-          "Relayer service is currently unavailable. Please try again later."
-        );
-      }
-
       const response = await fetch(`${RELAYER_API_URL}/withdraw`, {
         method: "POST",
         headers: {
@@ -135,49 +126,15 @@ export function useXoraxProgram() {
         }),
       });
 
-      const result = await response.json();
-
       if (!response.ok) {
-        // Handle specific error messages from relayer
-        let errorMessage =
-          result.message || result.error || "Withdrawal failed";
-
-        // Add more context based on status code
-        if (response.status === 400) {
-          errorMessage = `Invalid request: ${errorMessage}`;
-        } else if (response.status === 401) {
-          errorMessage = `Authentication failed: ${errorMessage}`;
-        } else if (response.status === 403) {
-          errorMessage = `Access denied: ${errorMessage}`;
-        } else if (response.status === 404) {
-          errorMessage = `Not found: ${errorMessage}`;
-        } else if (response.status === 503) {
-          errorMessage = `Service unavailable: ${errorMessage}`;
-        } else if (response.status === 504) {
-          errorMessage = `Timeout: ${errorMessage}`;
-        }
-
-        throw new Error(errorMessage);
+        const error = await response.json();
+        throw new Error(error.message || "Withdrawal failed");
       }
 
+      const result = await response.json();
       return result.signature;
     } catch (error: any) {
-      // Network errors
-      if (error.name === "TypeError" && error.message.includes("fetch")) {
-        throw new Error(
-          "Cannot connect to relayer service. Please check your internet connection."
-        );
-      }
-
-      // Timeout errors
-      if (error.name === "AbortError") {
-        throw new Error(
-          "Request timeout. The relayer service is taking too long to respond."
-        );
-      }
-
-      // Re-throw with original message if already formatted
-      throw error;
+      throw new Error(`Withdrawal failed: ${error.message}`);
     }
   };
 
@@ -188,6 +145,5 @@ export function useXoraxProgram() {
     fetchDepositRecord,
     deposit,
     withdraw,
-    RELAYER_API_URL,
   };
 }

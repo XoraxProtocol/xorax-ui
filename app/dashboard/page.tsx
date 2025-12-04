@@ -14,36 +14,12 @@ import {
 } from "@/hooks/useXoraxProgram";
 import LockIcon from "@mui/icons-material/Lock";
 import LockOpenIcon from "@mui/icons-material/LockOpen";
-import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
-import DepositIcon from "@mui/icons-material/Savings";
-import BoltIcon from "@mui/icons-material/Bolt";
-import ShieldIcon from "@mui/icons-material/Shield";
-import SaveIcon from "@mui/icons-material/Save";
-import CelebrationIcon from "@mui/icons-material/Celebration";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import VpnKeyIcon from "@mui/icons-material/VpnKey";
-import FlashOnIcon from "@mui/icons-material/FlashOn";
-import DownloadIcon from "@mui/icons-material/Download";
-import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
-import WarningIcon from "@mui/icons-material/Warning";
-import InfoIcon from "@mui/icons-material/Info";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
-import FolderOpenIcon from "@mui/icons-material/FolderOpen";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
-import WhatshotIcon from "@mui/icons-material/Whatshot";
-import DiamondIcon from "@mui/icons-material/Diamond";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import ErrorIcon from "@mui/icons-material/Error";
 import {
   generateDepositCredentials,
   toArray,
   saveDepositCredentials,
   getAllSavedDeposits,
 } from "@/lib/crypto";
-// import SplashCursor from "@/components/SplashCursor";
 
 export default function Dashboard() {
   const wallet = useWallet();
@@ -59,11 +35,6 @@ export default function Dashboard() {
     type: "success" | "error";
     text: string;
   } | null>(null);
-
-  // Relayer connection status
-  const [relayerStatus, setRelayerStatus] = useState<
-    "checking" | "online" | "offline"
-  >("checking");
 
   // Withdraw form
   const [commitmentHex, setCommitmentHex] = useState("");
@@ -99,37 +70,6 @@ export default function Dashboard() {
     const deposits = getAllSavedDeposits();
     setSavedDeposits(deposits);
   }, []);
-
-  // Check relayer health
-  useEffect(() => {
-    const checkRelayerHealth = async () => {
-      try {
-        const response = await fetch(
-          `${xorax.RELAYER_API_URL || "http://localhost:3001"}/health`,
-          {
-            method: "GET",
-            signal: AbortSignal.timeout(5000), // 5 second timeout
-          }
-        );
-
-        if (response.ok) {
-          setRelayerStatus("online");
-        } else {
-          setRelayerStatus("offline");
-        }
-      } catch (error) {
-        setRelayerStatus("offline");
-      }
-    };
-
-    // Initial check
-    checkRelayerHealth();
-
-    // Check every 30 seconds
-    const interval = setInterval(checkRelayerHealth, 30000);
-
-    return () => clearInterval(interval);
-  }, [xorax]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -242,27 +182,9 @@ export default function Dashboard() {
       URL.revokeObjectURL(url);
     } catch (error: any) {
       console.error("Deposit error:", error);
-
-      // Parse error messages for better UX
-      let errorMessage = error.message || "Unknown error";
-
-      if (errorMessage.includes("User rejected")) {
-        errorMessage = "Transaction cancelled by user";
-      } else if (errorMessage.includes("insufficient funds")) {
-        errorMessage =
-          "Insufficient SOL balance. Please add funds to your wallet.";
-      } else if (errorMessage.includes("blockhash")) {
-        errorMessage = "Network congestion. Please try again in a few moments.";
-      } else if (errorMessage.includes("timeout")) {
-        errorMessage = "Transaction timeout. Please try again.";
-      } else if (errorMessage.includes("0x1")) {
-        errorMessage =
-          "Transaction failed. You may have insufficient funds or network issues.";
-      }
-
       setMessage({
         type: "error",
-        text: `Deposit failed: ${errorMessage}`,
+        text: `Deposit failed: ${error.message || "Unknown error"}`,
       });
     } finally {
       setLoading(false);
@@ -323,16 +245,9 @@ export default function Dashboard() {
       setSavedDeposits(getAllSavedDeposits());
     } catch (error: any) {
       console.error("Withdraw error:", error);
-
-      // Parse error for user-friendly messages
-      let errorMessage = error.message || "Unknown error";
-
-      // Remove redundant "Withdrawal failed:" prefix if present
-      errorMessage = errorMessage.replace(/^Withdrawal failed:\s*/i, "");
-
       setMessage({
         type: "error",
-        text: errorMessage,
+        text: `Withdrawal failed: ${error.message || "Unknown error"}`,
       });
     } finally {
       setLoading(false);
@@ -369,7 +284,7 @@ export default function Dashboard() {
 
         setMessage({
           type: "success",
-          text: "Credentials loaded successfully!",
+          text: "Credentials loaded successfully! 🎉",
         });
       } catch (error) {
         setMessage({
@@ -420,25 +335,13 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col lg:flex-row relative overflow-hidden">
-      {/* Animated Background Gradients */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-0 -right-4 w-72 h-72 bg-pink-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-indigo-600 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-
-      {/* <SplashCursor /> */}
+    <div className="min-h-screen bg-black flex flex-col lg:flex-row">
       {/* Mobile Header */}
       <div className="lg:hidden sticky top-0 z-50 bg-black/95 backdrop-blur-xl border-b border-purple-800/30">
         <div className="p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 overflow-hidden bg-white">
-              <img
-                src="/xorax_logo.png"
-                alt="Xorax Logo"
-                className="w-full h-full object-contain"
-              />
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
+              <span className="text-white text-xl font-bold">X</span>
             </div>
             <div>
               <h1 className="text-lg font-bold text-white">Xorax</h1>
@@ -474,6 +377,38 @@ export default function Dashboard() {
             </svg>
           </button>
         </div>
+
+        {/* Mobile Tab Navigation */}
+        <div className="flex border-t border-purple-800/30">
+          <button
+            onClick={() => {
+              setActiveTab("deposit");
+              setIsMobileMenuOpen(false);
+            }}
+            className={`flex-1 py-3 px-4 font-semibold text-sm transition flex items-center justify-center gap-2 ${
+              activeTab === "deposit"
+                ? "bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-white border-b-2 border-purple-400"
+                : "text-gray-400 hover:text-white hover:bg-purple-900/10"
+            }`}
+          >
+            <LockIcon sx={{ fontSize: 18 }} />
+            <span>Deposit</span>
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("withdraw");
+              setIsMobileMenuOpen(false);
+            }}
+            className={`flex-1 py-3 px-4 font-semibold text-sm transition flex items-center justify-center gap-2 ${
+              activeTab === "withdraw"
+                ? "bg-gradient-to-r from-purple-600/30 to-pink-600/30 text-white border-b-2 border-purple-400"
+                : "text-gray-400 hover:text-white hover:bg-purple-900/10"
+            }`}
+          >
+            <LockOpenIcon sx={{ fontSize: 18 }} />
+            <span>Withdraw</span>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Sidebar Backdrop */}
@@ -488,7 +423,7 @@ export default function Dashboard() {
       {/* Sidebar - Desktop sticky, Mobile drawer */}
       <aside
         className={`
-        w-full lg:w-72 bg-linear-to-b from-purple-950/50 to-black border-r border-purple-800/30 backdrop-blur-xl
+        w-full lg:w-72 bg-gradient-to-b from-purple-950/50 to-black border-r border-purple-800/30 backdrop-blur-xl
         lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto
         transition-transform duration-300 ease-in-out
         ${
@@ -502,12 +437,8 @@ export default function Dashboard() {
         <div className="p-4 lg:p-6 pt-20 lg:pt-6">
           {/* Logo - Desktop only (mobile has header) */}
           <div className="hidden lg:flex items-center gap-3 mb-8">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50 overflow-hidden bg-white">
-              <img
-                src="/xorax_logo.png"
-                alt="Xorax Logo"
-                className="w-full h-full object-contain"
-              />
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg shadow-purple-500/50">
+              <span className="text-white text-2xl font-bold">X</span>
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">Xorax</h1>
@@ -524,7 +455,7 @@ export default function Dashboard() {
               }}
               className={`w-full px-4 py-3 rounded-xl text-left font-semibold transition flex items-center gap-3 ${
                 activeTab === "deposit"
-                  ? "bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50"
                   : "text-gray-400 hover:text-white hover:bg-purple-900/20"
               }`}
             >
@@ -538,7 +469,7 @@ export default function Dashboard() {
               }}
               className={`w-full px-4 py-3 rounded-xl text-left font-semibold transition flex items-center gap-3 ${
                 activeTab === "withdraw"
-                  ? "bg-linear-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50"
+                  ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/50"
                   : "text-gray-400 hover:text-white hover:bg-purple-900/20"
               }`}
             >
@@ -550,8 +481,7 @@ export default function Dashboard() {
           {/* Saved Deposits */}
           <div className="mb-6">
             <h3 className="text-sm font-bold text-purple-300 mb-3 flex items-center gap-2">
-              <SaveIcon sx={{ fontSize: 18 }} />
-              <span>Your Deposits</span>
+              <span>💾</span> Your Deposits
             </h3>
             {savedDeposits.length === 0 ? (
               <p className="text-gray-500 text-xs italic">
@@ -592,7 +522,7 @@ export default function Dashboard() {
                 </span>
               </div>
               <div className="w-full h-1 bg-purple-900/50 rounded-full overflow-hidden">
-                <div className="h-full w-2/3 bg-linear-to-r from-purple-500 to-pink-500"></div>
+                <div className="h-full w-2/3 bg-gradient-to-r from-purple-500 to-pink-500"></div>
               </div>
             </div>
 
@@ -605,51 +535,6 @@ export default function Dashboard() {
               </div>
               <p className="text-xs text-gray-400 font-mono truncate">
                 {xorax.programId?.toString().substring(0, 16) || "Loading"}...
-              </p>
-            </div>
-
-            <div
-              className={`p-3 rounded-lg border ${
-                relayerStatus === "online"
-                  ? "bg-emerald-900/20 border-emerald-700/30"
-                  : relayerStatus === "offline"
-                  ? "bg-red-900/20 border-red-700/30"
-                  : "bg-yellow-900/20 border-yellow-700/30"
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-1">
-                <div
-                  className={`w-2 h-2 rounded-full ${
-                    relayerStatus === "online"
-                      ? "bg-emerald-400 animate-pulse"
-                      : relayerStatus === "offline"
-                      ? "bg-red-400"
-                      : "bg-yellow-400 animate-pulse"
-                  }`}
-                ></div>
-                <span
-                  className={`text-xs font-semibold ${
-                    relayerStatus === "online"
-                      ? "text-emerald-300"
-                      : relayerStatus === "offline"
-                      ? "text-red-300"
-                      : "text-yellow-300"
-                  }`}
-                >
-                  Relayer{" "}
-                  {relayerStatus === "checking"
-                    ? "Checking..."
-                    : relayerStatus === "online"
-                    ? "Online"
-                    : "Offline"}
-                </span>
-              </div>
-              <p className="text-xs text-gray-400 truncate">
-                {relayerStatus === "online"
-                  ? "Gasless withdrawals ready"
-                  : relayerStatus === "offline"
-                  ? "Service unavailable"
-                  : "Checking connection..."}
               </p>
             </div>
           </div>
@@ -670,18 +555,10 @@ export default function Dashboard() {
         <div className="hidden lg:block sticky top-0 z-10 bg-black/50 backdrop-blur-xl border-b border-purple-800/30">
           <div className="px-4 lg:px-8 py-4 flex items-center justify-between">
             <div>
-              <h2 className="text-xl lg:text-2xl font-bold text-white flex items-center gap-2">
-                {activeTab === "deposit" ? (
-                  <>
-                    <LockIcon sx={{ fontSize: 28 }} />
-                    <span>Deposit Funds</span>
-                  </>
-                ) : (
-                  <>
-                    <LockOpenIcon sx={{ fontSize: 28 }} />
-                    <span>Withdraw Funds</span>
-                  </>
-                )}
+              <h2 className="text-xl lg:text-2xl font-bold text-white">
+                {activeTab === "deposit"
+                  ? "🔒 Deposit Funds"
+                  : "🔓 Withdraw Funds"}
               </h2>
               <p className="text-xs lg:text-sm text-gray-400 mt-1">
                 {activeTab === "deposit"
@@ -696,42 +573,27 @@ export default function Dashboard() {
         <div className="p-3 lg:p-8 max-w-4xl mx-auto">
           {message && (
             <div
-              className={`mb-4 lg:mb-6 p-4 lg:p-5 rounded-xl border-2 backdrop-blur shadow-2xl animate-in slide-in-from-top duration-300 hover:scale-[1.02] transition-transform ${
+              className={`mb-4 lg:mb-6 p-3 lg:p-4 rounded-xl border-2 backdrop-blur ${
                 message.type === "success"
-                  ? "bg-linear-to-br from-green-900/40 to-emerald-900/40 border-green-500/50 text-green-200 shadow-green-500/30"
-                  : "bg-linear-to-br from-red-900/40 to-rose-900/40 border-red-500/50 text-red-200 shadow-red-500/30"
-              }`}
+                  ? "bg-green-900/30 border-green-500/50 text-green-300"
+                  : "bg-red-900/30 border-red-500/50 text-red-300"
+              } animate-in slide-in-from-top duration-300`}
             >
-              <div className="flex items-start gap-3">
-                {message.type === "success" ? (
-                  <CheckCircleIcon
-                    sx={{ fontSize: 28 }}
-                    className="text-green-300"
-                  />
-                ) : (
-                  <ErrorIcon sx={{ fontSize: 28 }} className="text-red-300" />
-                )}
-                <pre className="whitespace-pre-wrap text-sm flex-1 leading-relaxed">
-                  {message.text}
-                </pre>
-              </div>
+              <pre className="whitespace-pre-wrap text-sm">{message.text}</pre>
             </div>
           )}
 
           {/* Show credentials after successful deposit */}
           {depositCredentials && (
-            <div className="mb-4 lg:mb-6 p-3 lg:p-6 rounded-2xl border-2 bg-linear-to-br from-purple-900/50 to-pink-900/50 border-purple-500/50 backdrop-blur-xl shadow-2xl shadow-purple-500/20 animate-in zoom-in duration-500">
+            <div className="mb-4 lg:mb-6 p-3 lg:p-6 rounded-2xl border-2 bg-gradient-to-br from-purple-900/50 to-pink-900/50 border-purple-500/50 backdrop-blur-xl shadow-2xl shadow-purple-500/20 animate-in zoom-in duration-500">
               <div className="flex items-start justify-between mb-3 lg:mb-4">
                 <div>
                   <h3 className="text-xl lg:text-2xl font-bold text-white mb-1 flex items-center gap-2">
-                    <CelebrationIcon
-                      sx={{ fontSize: 32 }}
-                      className="text-yellow-400"
-                    />
+                    <span className="text-2xl lg:text-3xl">🎉</span>
                     Deposit Complete!
                   </h3>
                   <p className="text-xs lg:text-sm text-purple-200">
-                    Your credentials are ready. Keep them safe!
+                    Your credentials are ready. Keep them safe! 🔐
                   </p>
                 </div>
                 <button
@@ -744,9 +606,8 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                 <div className="col-span-1 sm:col-span-2 bg-black/60 p-3 lg:p-4 rounded-xl border border-purple-500/30">
-                  <label className="text-xs text-purple-300 block mb-2 font-semibold flex items-center gap-1">
-                    <MonetizationOnIcon sx={{ fontSize: 16 }} />
-                    <span>AMOUNT</span>
+                  <label className="text-xs text-purple-300 block mb-2 font-semibold">
+                    💰 AMOUNT
                   </label>
                   <p className="text-white font-bold text-xl lg:text-2xl">
                     {depositCredentials.amount} SOL
@@ -754,9 +615,8 @@ export default function Dashboard() {
                 </div>
 
                 <div className="col-span-1 sm:col-span-2 bg-black/60 p-2 lg:p-4 rounded-xl border border-purple-500/30">
-                  <label className="text-xs text-purple-300 block mb-2 font-semibold flex items-center gap-1">
-                    <VpnKeyIcon sx={{ fontSize: 16 }} />
-                    <span>COMMITMENT</span>
+                  <label className="text-xs text-purple-300 block mb-2 font-semibold">
+                    🔑 COMMITMENT
                   </label>
                   <p className="text-white font-mono text-xs break-all leading-relaxed">
                     {depositCredentials.commitment}
@@ -764,9 +624,8 @@ export default function Dashboard() {
                 </div>
 
                 <div className="bg-black/60 p-2 lg:p-4 rounded-xl border border-purple-500/30">
-                  <label className="text-xs text-purple-300 block mb-2 font-semibold flex items-center gap-1">
-                    <LockIcon sx={{ fontSize: 16 }} />
-                    <span>SECRET</span>
+                  <label className="text-xs text-purple-300 block mb-2 font-semibold">
+                    🔐 SECRET
                   </label>
                   <p className="text-white font-mono text-xs break-all leading-relaxed">
                     {depositCredentials.secret}
@@ -774,9 +633,8 @@ export default function Dashboard() {
                 </div>
 
                 <div className="bg-black/60 p-2 lg:p-4 rounded-xl border border-purple-500/30">
-                  <label className="text-xs text-purple-300 block mb-2 font-semibold flex items-center gap-1">
-                    <FlashOnIcon sx={{ fontSize: 16 }} />
-                    <span>NULLIFIER</span>
+                  <label className="text-xs text-purple-300 block mb-2 font-semibold">
+                    ⚡ NULLIFIER
                   </label>
                   <p className="text-white font-mono text-xs break-all leading-relaxed">
                     {depositCredentials.nullifier}
@@ -787,9 +645,9 @@ export default function Dashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 lg:gap-3 mb-3 lg:mb-4">
                 <button
                   onClick={downloadCredentials}
-                  className="py-3 lg:py-4 px-4 lg:px-6 rounded-xl bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold transition shadow-lg hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-2 text-sm lg:text-base"
+                  className="py-3 lg:py-4 px-4 lg:px-6 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold transition shadow-lg hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-2 text-sm lg:text-base"
                 >
-                  <DownloadIcon sx={{ fontSize: 24 }} />
+                  <span className="text-xl lg:text-2xl">📥</span>
                   <span>Download JSON</span>
                 </button>
                 <button
@@ -802,17 +660,14 @@ export default function Dashboard() {
                   }}
                   className="py-3 lg:py-4 px-4 lg:px-6 rounded-xl bg-purple-600/20 hover:bg-purple-600/40 border-2 border-purple-500/50 hover:border-purple-400 text-white font-bold transition hover:scale-105 duration-300 flex items-center justify-center gap-2 text-sm lg:text-base"
                 >
-                  <RocketLaunchIcon sx={{ fontSize: 24 }} />
+                  <span className="text-xl lg:text-2xl">🚀</span>
                   <span>Use Now</span>
                 </button>
               </div>
 
               <div className="p-3 lg:p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-xl backdrop-blur">
                 <p className="text-xs lg:text-sm text-yellow-200 flex items-start gap-2">
-                  <WarningIcon
-                    sx={{ fontSize: 20 }}
-                    className="text-yellow-300"
-                  />
+                  <span className="text-lg lg:text-xl">⚠️</span>
                   <span>
                     <strong>Critical:</strong> These credentials can&apos;t be
                     recovered! Download and store them in a safe place.
@@ -822,89 +677,12 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Stats Overview Cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4 mb-6">
-            <div className="bg-linear-to-br from-purple-900/40 to-purple-950/40 border border-purple-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
-              <div className="flex items-center gap-2 mb-2">
-                <AccountBalanceWalletIcon
-                  sx={{ fontSize: 28 }}
-                  className="text-purple-400 group-hover:scale-125 transition-transform"
-                />
-                <span className="text-xs text-purple-300 font-semibold">
-                  Total Value
-                </span>
-              </div>
-              <p className="text-xl lg:text-2xl font-bold text-white bg-linear-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                {savedDeposits.reduce((sum, d) => sum + d.amount, 0).toFixed(2)}{" "}
-                SOL
-              </p>
-              <p className="text-xs text-purple-400 mt-1">In mixer</p>
-            </div>
-
-            <div className="bg-linear-to-br from-pink-900/40 to-pink-950/40 border border-pink-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
-              <div className="flex items-center gap-2 mb-2">
-                <DepositIcon
-                  sx={{ fontSize: 28 }}
-                  className="text-pink-400 group-hover:scale-125 transition-transform"
-                />
-                <span className="text-xs text-pink-300 font-semibold">
-                  Active Deposits
-                </span>
-              </div>
-              <p className="text-xl lg:text-2xl font-bold text-white bg-linear-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-                {savedDeposits.length}
-              </p>
-              <p className="text-xs text-pink-400 mt-1">Secured</p>
-            </div>
-
-            <div className="bg-linear-to-br from-indigo-900/40 to-indigo-950/40 border border-indigo-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group">
-              <div className="flex items-center gap-2 mb-2">
-                <BoltIcon
-                  sx={{ fontSize: 28 }}
-                  className="text-indigo-400 group-hover:scale-125 transition-transform"
-                />
-                <span className="text-xs text-indigo-300 font-semibold">
-                  Mixing Fee
-                </span>
-              </div>
-              <p className="text-xl lg:text-2xl font-bold text-white bg-linear-to-r from-indigo-400 to-cyan-400 bg-clip-text text-transparent">
-                {(MIXING_FEE / 1e9).toFixed(3)} SOL
-              </p>
-              <p className="text-xs text-indigo-400 mt-1">Per transaction</p>
-            </div>
-
-            <div className="bg-linear-to-br from-emerald-900/40 to-emerald-950/40 border border-emerald-700/50 rounded-xl p-4 backdrop-blur hover:scale-105 transition-all duration-300 cursor-default group relative overflow-hidden">
-              <div className="absolute inset-0 bg-linear-to-r from-transparent via-emerald-500/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-1000"></div>
-              <div className="relative">
-                <div className="flex items-center gap-2 mb-2">
-                  <ShieldIcon
-                    sx={{ fontSize: 28 }}
-                    className="text-emerald-400 group-hover:scale-125 transition-transform"
-                  />
-                  <span className="text-xs text-emerald-300 font-semibold">
-                    Privacy Status
-                  </span>
-                </div>
-                <p className="text-sm lg:text-base font-bold text-emerald-400 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                  Protected
-                </p>
-                <p className="text-xs text-emerald-400 mt-1">
-                  Maximum security
-                </p>
-              </div>
-            </div>
-          </div>
-
           <div className="grid gap-6">
             {/* Deposit Tab */}
             {activeTab === "deposit" && (
-              <div className="bg-linear-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-3 lg:p-8 backdrop-blur-xl shadow-2xl">
+              <div className="bg-gradient-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-3 lg:p-8 backdrop-blur-xl">
                 <h3 className="text-lg lg:text-xl font-bold text-white mb-3 lg:mb-6 flex items-center gap-2">
-                  <AttachMoneyIcon
-                    sx={{ fontSize: 28 }}
-                    className="animate-pulse text-green-400"
-                  />
+                  <span className="text-xl lg:text-2xl">💸</span>
                   Choose Amount
                 </h3>
 
@@ -920,22 +698,12 @@ export default function Dashboard() {
                       disabled={loading}
                       className={`group py-4 lg:py-6 px-2 lg:px-4 rounded-xl border-2 text-white font-bold transition disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 duration-300 shadow-lg ${
                         selectedAmount === amt
-                          ? "bg-linear-to-br from-purple-600/50 to-pink-600/50 border-purple-400 shadow-purple-500/50"
-                          : "bg-linear-to-br from-purple-600/10 to-pink-600/10 border-purple-500/30 hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400 hover:shadow-purple-500/50"
+                          ? "bg-gradient-to-br from-purple-600/50 to-pink-600/50 border-purple-400 shadow-purple-500/50"
+                          : "bg-gradient-to-br from-purple-600/10 to-pink-600/10 border-purple-500/30 hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400 hover:shadow-purple-500/50"
                       }`}
                     >
-                      <div className="mb-1 lg:mb-2 group-hover:scale-110 transition duration-300">
-                        {amt >= 5 ? (
-                          <DiamondIcon
-                            sx={{ fontSize: 32 }}
-                            className="text-purple-300"
-                          />
-                        ) : (
-                          <MonetizationOnIcon
-                            sx={{ fontSize: 32 }}
-                            className="text-yellow-400"
-                          />
-                        )}
+                      <div className="text-2xl lg:text-3xl mb-1 lg:mb-2 group-hover:scale-110 transition duration-300">
+                        {amt >= 5 ? "💎" : amt >= 1 ? "💰" : "🪙"}
                       </div>
                       <div className="text-base lg:text-xl">{amt} SOL</div>
                       <div className="text-xs text-purple-300 mt-1">
@@ -949,7 +717,7 @@ export default function Dashboard() {
                 {/* Custom Amount */}
                 <div className="mb-3 lg:mb-6">
                   <label className="block text-xs lg:text-sm font-semibold text-purple-300 mb-2 lg:mb-3">
-                    Or enter custom amount
+                    Or enter custom amount 🎯
                   </label>
                   <input
                     type="number"
@@ -980,19 +748,16 @@ export default function Dashboard() {
                         (!customAmount ||
                           parseFloat(customAmount) < MIN_DEPOSIT_AMOUNT))
                     }
-                    className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
+                    className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
                   >
                     {loading ? (
                       <>
-                        <HourglassEmptyIcon
-                          sx={{ fontSize: 24 }}
-                          className="animate-spin"
-                        />
+                        <span className="animate-spin text-2xl">⏳</span>
                         <span>Processing...</span>
                       </>
                     ) : (
                       <>
-                        <WhatshotIcon sx={{ fontSize: 24 }} />
+                        <span className="text-2xl">🌀</span>
                         <span>
                           Mix{" "}
                           {selectedAmount ||
@@ -1018,55 +783,25 @@ export default function Dashboard() {
 
                 {/* Withdrawal Delay */}
                 <div className="mb-3 lg:mb-6">
-                  <label className="block text-xs lg:text-sm font-semibold text-purple-300 mb-2 lg:mb-3 flex items-center gap-2">
-                    <AccessTimeIcon sx={{ fontSize: 20 }} />
-                    <span>Privacy Delay</span>
-                    <span className="text-xs font-normal text-purple-400 ml-auto">
-                      (Longer = Better Privacy)
-                    </span>
+                  <label className="block text-xs lg:text-sm font-semibold text-purple-300 mb-2 lg:mb-3">
+                    ⏰ Privacy Delay
                   </label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 lg:gap-3">
-                    {delayOptions.map((option, idx) => (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2 lg:gap-3">
+                    {delayOptions.map((option) => (
                       <button
                         key={option.value}
                         onClick={() => setDelay(option.value)}
-                        className={`group relative py-3 lg:py-4 px-3 lg:px-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 overflow-hidden ${
+                        className={`py-3 lg:py-4 px-3 lg:px-4 rounded-xl border-2 transition duration-300 ${
                           delay === option.value
-                            ? "bg-linear-to-br from-purple-600/40 to-pink-600/40 border-purple-400 text-white shadow-lg shadow-purple-500/50 scale-105"
-                            : "bg-purple-600/10 border-purple-800/30 text-gray-400 hover:text-white hover:border-purple-600 hover:bg-purple-600/20 hover:shadow-lg"
+                            ? "bg-gradient-to-br from-purple-600/40 to-pink-600/40 border-purple-400 text-white shadow-lg shadow-purple-500/50"
+                            : "bg-purple-600/10 border-purple-800/30 text-gray-400 hover:text-white hover:border-purple-600 hover:bg-purple-600/20"
                         }`}
                       >
-                        {/* Animated background on hover */}
-                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-purple-500/20 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700"></div>
-
-                        <div className="relative">
-                          <div className="font-bold text-sm lg:text-base mb-1">
-                            {option.label}
-                          </div>
-                          <div
-                            className={`text-xs mt-1 flex items-center justify-center gap-1 ${
-                              delay === option.value
-                                ? "text-purple-200"
-                                : "opacity-75"
-                            }`}
-                          >
-                            {/* Privacy level indicator */}
-                            <div className="flex gap-0.5">
-                              {[...Array(5)].map((_, i) => (
-                                <div
-                                  key={i}
-                                  className={`w-1 h-3 rounded-full ${
-                                    i <= idx
-                                      ? delay === option.value
-                                        ? "bg-purple-300"
-                                        : "bg-purple-500"
-                                      : "bg-gray-600"
-                                  }`}
-                                />
-                              ))}
-                            </div>
-                            <span className="ml-1">{option.privacy}</span>
-                          </div>
+                        <div className="font-bold text-base lg:text-lg">
+                          {option.label}
+                        </div>
+                        <div className="text-xs opacity-75 mt-1">
+                          {option.privacy} Privacy
                         </div>
                       </button>
                     ))}
@@ -1074,12 +809,12 @@ export default function Dashboard() {
                 </div>
 
                 {/* Info Box */}
-                <div className="bg-linear-to-br from-purple-900/30 to-pink-900/30 border border-purple-700/50 rounded-xl p-4 lg:p-5 backdrop-blur">
+                <div className="bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-700/50 rounded-xl p-4 lg:p-5 backdrop-blur">
                   <div className="flex items-start gap-3">
-                    <InfoIcon sx={{ fontSize: 32 }} className="text-blue-400" />
+                    <span className="text-2xl lg:text-3xl">ℹ️</span>
                     <div className="text-xs lg:text-sm text-purple-100">
                       <p className="font-bold mb-2 text-base lg:text-lg">
-                        How it works
+                        How it works 🎯
                       </p>
                       <ul className="space-y-2 text-xs leading-relaxed">
                         <li className="flex items-start gap-2">
@@ -1096,12 +831,12 @@ export default function Dashboard() {
                         <li className="flex items-start gap-2">
                           <span>•</span>
                           <span>
-                            Withdraw to any address - totally gasless!
+                            Withdraw to any address - totally gasless! 🔥
                           </span>
                         </li>
                         <li className="flex items-start gap-2">
                           <span>•</span>
-                          <span>Your credentials = your keys</span>
+                          <span>Your credentials = your keys 🔐</span>
                         </li>
                       </ul>
                     </div>
@@ -1112,29 +847,23 @@ export default function Dashboard() {
 
             {/* Withdraw Tab */}
             {activeTab === "withdraw" && (
-              <div className="bg-linear-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-8 backdrop-blur-xl">
+              <div className="bg-gradient-to-br from-purple-950/30 to-black border border-purple-800/30 rounded-2xl p-8 backdrop-blur-xl">
                 <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                  <LockOpenIcon sx={{ fontSize: 28 }} />
+                  <span className="text-2xl">🔓</span>
                   Withdraw Privately
                 </h3>
 
                 {/* File Upload Section */}
-                <div className="mb-4 lg:mb-6 p-4 lg:p-6 bg-linear-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-700/50 border-dashed rounded-xl backdrop-blur hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300">
+                <div className="mb-4 lg:mb-6 p-3 lg:p-5 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border-2 border-purple-700/50 border-dashed rounded-xl backdrop-blur">
                   <label className="flex flex-col items-center gap-3 cursor-pointer group">
-                    <div className="relative">
-                      <div className="group-hover:scale-110 transition-transform duration-300 group-hover:rotate-12">
-                        <FolderOpenIcon
-                          sx={{ fontSize: 64 }}
-                          className="text-purple-400"
-                        />
-                      </div>
-                      <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-500 rounded-full animate-ping"></div>
+                    <div className="text-4xl group-hover:scale-110 transition duration-300">
+                      📁
                     </div>
                     <div className="text-center">
-                      <p className="text-purple-200 font-bold text-base lg:text-lg mb-1">
+                      <p className="text-purple-200 font-bold text-lg">
                         Upload Credentials File
                       </p>
-                      <p className="text-xs text-purple-300">
+                      <p className="text-xs text-purple-300 mt-1">
                         Click to upload your JSON file or drag it here
                       </p>
                     </div>
@@ -1144,7 +873,7 @@ export default function Dashboard() {
                       onChange={handleFileUpload}
                       className="hidden"
                     />
-                    <div className="px-6 py-2.5 rounded-lg bg-linear-to-r from-purple-600/30 to-pink-600/30 border border-purple-500/50 text-purple-100 text-sm font-semibold group-hover:from-purple-600/50 group-hover:to-pink-600/50 group-hover:border-purple-400 group-hover:scale-105 transition-all duration-300 shadow-lg">
+                    <div className="px-6 py-2 rounded-lg bg-purple-600/20 border border-purple-500/50 text-purple-200 text-sm font-semibold group-hover:bg-purple-600/40 transition">
                       Choose File
                     </div>
                   </label>
@@ -1155,7 +884,7 @@ export default function Dashboard() {
                     <div className="w-full border-t border-purple-700/50"></div>
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-4 bg-linear-to-r from-purple-950/80 to-black text-purple-300 font-semibold">
+                    <span className="px-4 bg-gradient-to-r from-purple-950/80 to-black text-purple-300 font-semibold">
                       Or enter manually
                     </span>
                   </div>
@@ -1163,8 +892,8 @@ export default function Dashboard() {
 
                 <div className="space-y-3 lg:space-y-4">
                   <div>
-                    <label className="text-xs lg:text-sm font-semibold text-purple-300 mb-2 flex items-center gap-2">
-                      <VpnKeyIcon sx={{ fontSize: 18 }} /> Commitment
+                    <label className="text-xs lg:text-sm font-semibold text-purple-300 mb-2 flex items-center gap-2\">
+                      <span>🔑</span> Commitment
                     </label>
                     <input
                       type="text"
@@ -1177,7 +906,7 @@ export default function Dashboard() {
 
                   <div>
                     <label className="text-xs lg:text-sm font-semibold text-purple-300 mb-2 flex items-center gap-2">
-                      <LockIcon sx={{ fontSize: 18 }} /> Secret
+                      <span>🔐</span> Secret
                     </label>
                     <input
                       type="text"
@@ -1190,7 +919,7 @@ export default function Dashboard() {
 
                   <div>
                     <label className="text-xs lg:text-sm font-semibold text-purple-300 mb-2 flex items-center gap-2">
-                      <FlashOnIcon sx={{ fontSize: 18 }} /> Nullifier
+                      <span>⚡</span> Nullifier
                     </label>
                     <input
                       type="text"
@@ -1203,7 +932,7 @@ export default function Dashboard() {
 
                   <div>
                     <label className="text-xs lg:text-sm font-semibold text-purple-300 mb-2 flex items-center gap-2">
-                      <LocationOnIcon sx={{ fontSize: 18 }} /> Recipient Address
+                      <span>📍</span> Recipient Address
                     </label>
                     <input
                       type="text"
@@ -1220,7 +949,7 @@ export default function Dashboard() {
                     />
                     {addressError && (
                       <p className="text-red-400 text-xs mt-1 flex items-center gap-1">
-                        <WarningIcon sx={{ fontSize: 16 }} /> {addressError}
+                        <span>⚠️</span> {addressError}
                       </p>
                     )}
                   </div>
@@ -1228,31 +957,27 @@ export default function Dashboard() {
                   <button
                     onClick={handleWithdraw}
                     disabled={loading}
-                    className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-linear-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
+                    className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
                   >
                     {loading ? (
                       <>
-                        <HourglassEmptyIcon
-                          sx={{ fontSize: 24 }}
-                          className="animate-spin"
-                        />
+                        <span className="animate-spin text-xl lg:text-2xl">
+                          ⏳
+                        </span>
                         <span>Processing...</span>
                       </>
                     ) : (
                       <>
-                        <RocketLaunchIcon sx={{ fontSize: 24 }} />
+                        <span className="text-xl lg:text-2xl">🚀</span>
                         <span>Withdraw (Gasless!)</span>
                       </>
                     )}
                   </button>
                 </div>
 
-                <div className="mt-4 lg:mt-6 bg-linear-to-br from-purple-900/30 to-pink-900/30 border border-purple-700/50 rounded-xl p-3 lg:p-5 backdrop-blur">
+                <div className="mt-4 lg:mt-6 bg-gradient-to-br from-purple-900/30 to-pink-900/30 border border-purple-700/50 rounded-xl p-3 lg:p-5 backdrop-blur">
                   <div className="flex items-start gap-3">
-                    <LocalFireDepartmentIcon
-                      sx={{ fontSize: 32 }}
-                      className="text-orange-400"
-                    />
+                    <span className="text-2xl lg:text-3xl">🔥</span>
                     <div className="text-xs lg:text-sm text-purple-100">
                       <p className="font-bold mb-2 text-base lg:text-lg">
                         Gasless Withdrawal
@@ -1260,7 +985,7 @@ export default function Dashboard() {
                       <p className="text-xs leading-relaxed">
                         No wallet needed! Withdraw to any address, even unfunded
                         ones. The relayer covers the gas - you just need your
-                        credentials.
+                        credentials. 🎯
                       </p>
                     </div>
                   </div>
