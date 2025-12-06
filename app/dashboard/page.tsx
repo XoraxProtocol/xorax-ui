@@ -708,8 +708,8 @@ export default function Dashboard() {
                       disabled={loading}
                       className={`group py-4 lg:py-6 px-2 lg:px-4 rounded-xl border-2 text-white font-bold transition disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 duration-300 shadow-lg ${
                         selectedAmount === amt
-                          ? "bg-gradient-to-br from-purple-600/50 to-pink-600/50 border-purple-400 shadow-purple-500/50"
-                          : "bg-gradient-to-br from-purple-600/10 to-pink-600/10 border-purple-500/30 hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400 hover:shadow-purple-500/50"
+                          ? "bg-linear-to-br from-purple-600/50 to-pink-600/50 border-purple-400 shadow-purple-500/50"
+                          : "bg-linear-to-br from-purple-600/10 to-pink-600/10 border-purple-500/30 hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400 hover:shadow-purple-500/50"
                       }`}
                     >
                       <div className="text-2xl lg:text-3xl mb-1 lg:mb-2 group-hover:scale-110 transition duration-300">

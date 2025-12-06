@@ -22,7 +22,7 @@ export default function Home() {
         {/* Navigation */}
         <nav className="flex items-center justify-between mb-12 lg:mb-20">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-white">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden bg-transparent">
               <img
                 src="/xorax_logo.png"
                 alt="Xorax Logo"
@@ -47,6 +47,12 @@ export default function Home() {
               className="text-gray-300 hover:text-white transition"
             >
               How It Works
+            </a>
+            <a
+              href="#roadmap"
+              className="text-gray-300 hover:text-white transition"
+            >
+              Roadmap
             </a>
             <a
               href="/docs"
@@ -109,6 +115,13 @@ export default function Home() {
               className="block text-gray-300 hover:text-white transition py-2 px-4 rounded-lg hover:bg-purple-900/20"
             >
               How It Works
+            </a>
+            <a
+              href="#roadmap"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-gray-300 hover:text-white transition py-2 px-4 rounded-lg hover:bg-purple-900/20"
+            >
+              Roadmap
             </a>
             <a
               href="/docs"
@@ -354,8 +367,9 @@ export default function Home() {
                   Build with Xorax SDK
                 </h2>
                 <p className="text-base lg:text-xl text-gray-300 mb-6 lg:mb-8">
-                  Integrate privacy mixing into your own applications with our
-                  official TypeScript SDK. Available on npm.
+                  Integrate privacy mixing into your applications with our
+                  official TypeScript SDK v1.1.0. Now live on Solana mainnet and
+                  published on npm.
                 </p>
               </div>
 
@@ -370,8 +384,7 @@ export default function Home() {
                     </code>
                   </div>
                   <p className="text-gray-400 text-sm">
-                    TypeScript-first SDK with full type safety and
-                    auto-completion
+                    Latest v1.1.0 with mainnet support
                   </p>
                 </div>
 
@@ -380,10 +393,10 @@ export default function Home() {
                     Features
                   </h3>
                   <ul className="space-y-2 text-gray-300 text-sm">
-                    <li>✅ Complete TypeScript support</li>
+                    <li>✅ Mainnet & Devnet support</li>
+                    <li>✅ Complete TypeScript types</li>
                     <li>✅ Browser & Node.js compatible</li>
                     <li>✅ Crypto utilities included</li>
-                    <li>✅ React hooks & examples</li>
                   </ul>
                 </div>
               </div>
@@ -393,14 +406,15 @@ export default function Home() {
                   Quick Start Example
                 </h3>
                 <pre className="overflow-x-auto text-sm text-gray-300">
-                  <code>{`import { XoraxClient, generateSecret, generateNullifier } from 'xorax-sdk';
+                  <code>{`import { XoraxClient } from 'xorax-sdk';
+import { Connection } from '@solana/web3.js';
 
+// Connect to mainnet
+const connection = new Connection('https://api.mainnet-beta.solana.com');
 const client = new XoraxClient(connection, wallet);
-const secret = generateSecret();
-const nullifier = generateNullifier();
 
 // Deposit 0.5 SOL with 1 hour delay
-await client.deposit(commitment, 0.5, 3600);`}</code>
+await client.deposit(0.5, 3600);`}</code>
                 </pre>
               </div>
 
@@ -486,6 +500,228 @@ await client.deposit(commitment, 0.5, 3600);`}</code>
               >
                 View Chart
               </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Roadmap Section */}
+        <section id="roadmap" className="mb-20 lg:mb-32 px-4">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              Roadmap
+            </h2>
+            <p className="text-gray-400 text-base lg:text-lg">
+              Building the future of privacy on Solana
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto space-y-8">
+            {/* Q4 2025 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-green-500/20 rounded-full text-green-400 text-sm font-semibold border border-green-500/30">
+                  ✓ COMPLETED
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  Q4 2025 - Launch
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 mt-1">✓</span>
+                  <span>Core protocol deployment on Solana mainnet</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 mt-1">✓</span>
+                  <span>Web interface launch with deposit & withdraw</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 mt-1">✓</span>
+                  <span>$XORAX token launch on Pump.fun</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 mt-1">✓</span>
+                  <span>TypeScript SDK v1.1.0 published on npm</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 mt-1">✓</span>
+                  <span>Relayer infrastructure for gasless withdrawals</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Q1 2026 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-blue-500/20 rounded-full text-blue-400 text-sm font-semibold border border-blue-500/30">
+                  PLANNED
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  Q1 2026 - Growth
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">○</span>
+                  <span>Community growth & marketing campaigns</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">○</span>
+                  <span>Strategic partnerships & integrations</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">○</span>
+                  <span>Security audit & bug bounty program</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">○</span>
+                  <span>Enhanced analytics dashboard</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">○</span>
+                  <span>Performance optimizations</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Q2 2026 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-purple-500/20 rounded-full text-purple-400 text-sm font-semibold border border-purple-500/30">
+                  PLANNED
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  Q2 2026 - Expansion
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Multi-token support (USDC, USDT)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Mobile applications (iOS & Android)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Decentralized relayer network expansion</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Major wallet integrations</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Developer grants program</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Q3 2026 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-purple-500/20 rounded-full text-purple-400 text-sm font-semibold border border-purple-500/30">
+                  PLANNED
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  Q3 2026 - Ecosystem
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>DeFi protocol integrations</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Governance DAO with $XORAX staking</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Privacy pools & shared anonymity sets</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Cross-chain bridge integration</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-purple-400 mt-1">○</span>
+                  <span>Advanced privacy features</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Q4 2025 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-blue-500/20 rounded-full text-blue-400 text-sm font-semibold border border-blue-500/30">
+                  IN PROGRESS
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  Q4 2025 - Current Phase
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">→</span>
+                  <span>Community growth & adoption campaigns</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">→</span>
+                  <span>Strategic partnerships & integrations</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">→</span>
+                  <span>Performance optimizations & bug fixes</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">→</span>
+                  <span>Enhanced relayer network infrastructure</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-blue-400 mt-1">→</span>
+                  <span>User experience improvements</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 2026 */}
+            <div className="bg-white/5 backdrop-blur border border-purple-800/30 rounded-2xl p-6 lg:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="px-4 py-2 bg-pink-500/20 rounded-full text-pink-400 text-sm font-semibold border border-pink-500/30">
+                  FUTURE
+                </div>
+                <h3 className="text-xl lg:text-2xl font-bold text-white">
+                  2026 - Advanced Features
+                </h3>
+              </div>
+              <ul className="space-y-3 text-gray-300">
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>Multi-token support (USDC, USDT, and more)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>Mobile applications (iOS & Android)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>zk-SNARK integration for enhanced privacy</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>DeFi protocol integrations & composability</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>Governance DAO with $XORAX staking</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-pink-400 mt-1">○</span>
+                  <span>Cross-chain privacy solutions</span>
+                </li>
+              </ul>
             </div>
           </div>
         </section>
