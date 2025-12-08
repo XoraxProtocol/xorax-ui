@@ -44,6 +44,11 @@ export default function Dashboard() {
   const [nullifierHex, setNullifierHex] = useState("");
   const [recipientAddress, setRecipientAddress] = useState("");
 
+  // Countdown timer state
+  const [depositTimestamp, setDepositTimestamp] = useState<number | null>(null);
+  const [depositDelay, setDepositDelay] = useState<number | null>(null);
+  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+
   // Saved deposits
   const [savedDeposits, setSavedDeposits] = useState<any[]>([]);
 
@@ -84,6 +89,31 @@ export default function Dashboard() {
       document.body.style.overflow = "unset";
     };
   }, [isMobileMenuOpen]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (!depositTimestamp || !depositDelay) {
+      setTimeRemaining(null);
+      return;
+    }
+
+    const updateCountdown = () => {
+      const now = Math.floor(Date.now() / 1000); // Current time in seconds
+      const withdrawalTime = depositTimestamp + depositDelay;
+      const remaining = withdrawalTime - now;
+
+      if (remaining <= 0) {
+        setTimeRemaining(0);
+      } else {
+        setTimeRemaining(remaining);
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+
+    return () => clearInterval(interval);
+  }, [depositTimestamp, depositDelay]);
 
   // Validate recipient address with checksum
   const validateRecipientAddress = (address: string) => {
@@ -159,6 +189,7 @@ export default function Dashboard() {
       });
 
       // Auto-download credentials as backup
+      const timestamp = Math.floor(Date.now() / 1000); // Current timestamp in seconds
       const blob = new Blob(
         [
           JSON.stringify(
@@ -167,8 +198,9 @@ export default function Dashboard() {
               commitment,
               secret: credentials.secretHex,
               nullifier: credentials.nullifierHex,
-              delaySeconds: delay,
-              network: "devnet",
+              delaySeconds: parseInt(delay),
+              timestamp: timestamp,
+              network: "mainnet",
             },
             null,
             2
@@ -284,10 +316,21 @@ export default function Dashboard() {
           setNullifierHex(credentials.nullifier);
         }
 
+        // Set timestamp and delay for countdown
+        if (credentials.timestamp) {
+          setDepositTimestamp(credentials.timestamp);
+        }
+        if (credentials.delaySeconds) {
+          setDepositDelay(credentials.delaySeconds);
+        }
+
         setMessage({
           type: "success",
           text: "Credentials loaded successfully! 🎉",
         });
+
+        // Switch to withdraw tab
+        setActiveTab("withdraw");
       } catch (error) {
         setMessage({
           type: "error",
@@ -540,7 +583,7 @@ export default function Dashboard() {
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-xs text-green-300 font-semibold">
-                  Devnet Active
+                  Mainnet Active
                 </span>
               </div>
               <p className="text-xs text-gray-400 font-mono truncate">
@@ -900,6 +943,42 @@ export default function Dashboard() {
                   </label>
                 </div>
 
+                {/* Countdown Timer */}
+                {depositTimestamp && depositDelay && timeRemaining !== null && (
+                  <div
+                    className={`mb-6 p-4 rounded-xl border-2 backdrop-blur ${
+                      timeRemaining > 0
+                        ? "bg-orange-900/30 border-orange-500/50"
+                        : "bg-green-900/30 border-green-500/50"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
+                          <span className="text-xl">⏱️</span>
+                          {timeRemaining > 0
+                            ? "Withdrawal Available In:"
+                            : "Ready to Withdraw!"}
+                        </p>
+                        {timeRemaining > 0 ? (
+                          <p className="text-2xl font-bold text-white">
+                            {Math.floor(timeRemaining / 3600)}h{" "}
+                            {Math.floor((timeRemaining % 3600) / 60)}m{" "}
+                            {timeRemaining % 60}s
+                          </p>
+                        ) : (
+                          <p className="text-xl font-bold text-green-300 flex items-center gap-2">
+                            ✅ You can now withdraw your funds!
+                          </p>
+                        )}
+                      </div>
+                      {timeRemaining > 0 && (
+                        <div className="text-4xl animate-pulse">⏳</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
                 <div className="relative mb-6">
                   <div className="absolute inset-0 flex items-center">
                     <div className="w-full border-t border-purple-700/50"></div>
@@ -977,7 +1056,9 @@ export default function Dashboard() {
 
                   <button
                     onClick={handleWithdraw}
-                    disabled={loading}
+                    disabled={
+                      loading || (timeRemaining !== null && timeRemaining > 0)
+                    }
                     className="w-full py-4 lg:py-5 px-6 lg:px-8 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold text-base lg:text-lg transition disabled:opacity-50 disabled:cursor-not-allowed shadow-2xl hover:shadow-purple-500/50 hover:scale-105 duration-300 flex items-center justify-center gap-3"
                   >
                     {loading ? (
@@ -986,6 +1067,10 @@ export default function Dashboard() {
                           ⏳
                         </span>
                         <span>Processing...</span>
+                      </>
+                    ) : timeRemaining !== null && timeRemaining > 0 ? (
+                      <>
+                        <span>Withdraw</span>
                       </>
                     ) : (
                       <>
