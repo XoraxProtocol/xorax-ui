@@ -814,7 +814,8 @@ export default function DocsPage() {
                             <strong>Network:</strong> Solana SPL Token
                           </li>
                           <li>
-                            <strong>Contract:</strong> [To be added]
+                            <strong>Contract:</strong>{" "}
+                            9ufweNAGB1vYiB7f1vgELnJnS3LLisMD6GgdMwXQpump
                           </li>
                         </ul>
                       </div>
