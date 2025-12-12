@@ -105,7 +105,7 @@ xorax-ui/
 - **Website**: [https://xorax.cash](https://xorax.cash)
 - **Documentation**: [https://xorax.cash/docs](https://xorax.cash/docs)
 - **npm Package**: [xorax-sdk](https://www.npmjs.com/package/xorax-sdk)
-- **Twitter**: [@XoraxProtocol](https://twitter.com/XoraxProtocol)
+- **Twitter**: [@xoraxcash](https://x.com/xoraxcash)
 
 ## 📄 License
 

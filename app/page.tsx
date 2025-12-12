@@ -761,7 +761,7 @@ await client.deposit(0.5, 3600);`}</code>
               Docs
             </a>
             <a
-              href="https://x.com/xoraxprotocol"
+              href="https://x.com/xoraxcash"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-purple-400 transition"
